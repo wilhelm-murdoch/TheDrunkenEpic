@@ -15,6 +15,7 @@ default_run_options[:pty] = true
 # Stages.
 set :stages, %w(production)
 set :default_stage, "production"
+set :deploy_to, "/mnt/#{app}"
 require 'capistrano/ext/multistage'
 
 require 'bundler/capistrano'
