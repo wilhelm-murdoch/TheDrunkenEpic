@@ -20,8 +20,6 @@ require 'capistrano/ext/multistage'
 
 require 'bundler/capistrano'
 
-load 'deploy/assets'
-
 after "deploy:restart", "deploy:cleanup"
 
 desc 'Used to remotely manage Bundler for updated Gems.'
@@ -47,7 +45,7 @@ namespace :deploy do
 
   desc 'Start site processes'
   task :start do
-    run "bluepill load /mnt/thedrunkenepic/current/config/pills/#{app}-#{stage}.pill --no-privileged -c /mnt/bluepill"
+    run "bluepill load /mnt/thedrunkenepic/current/config/pills/#{stage}.pill --no-privileged -c /mnt/bluepill"
   end
 
   desc 'Stop site processes'
