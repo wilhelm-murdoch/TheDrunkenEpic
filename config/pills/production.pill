@@ -1,0 +1,21 @@
+Bluepill.application(:thedrunkenepic, :log_file => '/mnt/log/bluepill/bluepill.log', :base_dir => '/mnt/bluepill') do |app|
+  environment = 'production'
+  current_path = '/mnt/thedrunkenepic/current'
+  shared_path = '/mnt/thedrunkenepic/shared'
+
+  app.process('thin') do |process|
+    process.working_dir = current_path
+    process.pid_file = "#{shared_path}/pids/thin.pid"
+    process.environment = {'RACK_ENV' => environment}
+    process.stdout = process.stderr = "#{shared_path}/log/thedrunkenepic.log"
+
+    process.start_command = 'bundle exec thin start -R config.ru'
+    process.stop_command = 'kill -QUIT {{PID}}'
+    process.restart_command = 'kill -USR2 {{PID}}'
+
+    process.start_grace_time = 10.seconds
+    process.stop_grace_time = 5.seconds
+    process.restart_grace_time = 13.seconds
+    process.checks :flapping, :times => 2, :within => 30.seconds, :retry_in => 15.seconds
+  end
+end
